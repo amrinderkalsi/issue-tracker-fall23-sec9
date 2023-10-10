@@ -35,22 +35,44 @@ class IssueList extends Component {
   }
 
   componentDidMount() {
-    // setTimeout(() =>{
-    //   this.setState({ issues: issues});
-    // }, 800)
 
-    fetch('/api/issues')
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      data.records.forEach(issue => {
-        issue.created = new Date(issue.created);
-        if (issue.completionDate) {
-          issue.completionDate = new Date(issue.completionDate);
-        }
-      });
-      this.setState({issues: data.records})
-    }).catch(err => console.log(err));
+    // fetch('/api/issues')
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log(data);
+    //   data.records.forEach(issue => {
+    //     issue.created = new Date(issue.created);
+    //     if (issue.completionDate) {
+    //       issue.completionDate = new Date(issue.completionDate);
+    //     }
+    //   });
+    //   this.setState({issues: data.records})
+    // }).catch(err => console.log(err));
+
+    fetch('/graphql', { 
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `
+          query {
+            issueList {
+              completionDate
+              created
+              effort
+              id
+              owner
+              status
+              title
+            }
+          }
+        `
+      })
+    }).then(res => res.json())
+    .then(body => {
+      console.log('data', body)
+    });
 
   }
 
