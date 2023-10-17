@@ -9,9 +9,7 @@ class IssueAdd extends Component {
         console.log(form);
         this.props.createIssue({
             owner: form.owner.value,
-            title: form.title.value,
-            created: new Date(),
-            status: 'New'
+            title: form.title.value
         });
 
         form.owner.value = '';
