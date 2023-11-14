@@ -4,7 +4,21 @@ class IssueFilter extends Component {
     render() {
         return (
             <div>
-                This is a placeholder for Issue Filter.
+                Status
+                {' '}
+                <select>
+                    <option value="" />
+                    <option value="Open">Open</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="New">New</option>
+                </select>
+                {' '}
+                Effort
+                <input type="text" />
+                {' '}
+                <button>Apply</button>
+                {' '}
+                <button>Reset</button>
             </div>
         );
     }
