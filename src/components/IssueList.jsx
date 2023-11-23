@@ -2,28 +2,6 @@ import { Component } from 'react';
 import IssueFilter from './IssueFilter';
 import IssueTable from './IssueTable';
 import IssueAdd from './IssueAdd';
-
-// const issues = [
-//   {
-//     id: 1, 
-//     status: 'Open', 
-//     owner: 'Ravan',
-//     created: new Date('2016-08-15'), 
-//     effort: 5, 
-//     completionDate: undefined,
-//     title: 'Error in console when clicking Add',
-//   },
-//   {
-//     id: 2, 
-//     status: 'Assigned', 
-//     owner: 'Eddie',
-//     created: new Date('2016-08-16'), 
-//     effort: 14, 
-//     completionDate: new Date('2016-08-30'),
-//     title: 'Missing bottom border on panel',
-//   },
-// ];
-
 class IssueList extends Component {
 
   constructor() {
@@ -34,21 +12,7 @@ class IssueList extends Component {
     }
   }
 
-  componentDidMount() {
-
-    // fetch('/api/issues')
-    // .then(res => res.json())
-    // .then(data => {
-    //   console.log(data);
-    //   data.records.forEach(issue => {
-    //     issue.created = new Date(issue.created);
-    //     if (issue.completionDate) {
-    //       issue.completionDate = new Date(issue.completionDate);
-    //     }
-    //   });
-    //   this.setState({issues: data.records})
-    // }).catch(err => console.log(err));
-
+  loadData = () => {
     fetch('/graphql', { 
       method: 'POST',
       headers: {
@@ -79,32 +43,13 @@ class IssueList extends Component {
       });
       this.setState({issues: body.data.issueList})
     });
+  }
 
+  componentDidMount() {
+    this.loadData();
   }
 
   createIssue = (issue) => {
-    // fetch('/api/issues', {
-    //   method: 'POST',
-    //   headers: {
-    //     'content-type': 'application/json'
-    //   },
-    //   body: JSON.stringify(issue)
-    // }).then(res => {
-    //   if (res.ok) {
-    //     res.json().then(data => {
-    //       console.log(data)
-    //       data.created = new Date(data.created);
-    //       if (data.completionDate) {
-    //         data.completionDate = new Date(data.completionDate);
-    //       }
-    //       const newIssueArray = [...this.state.issues, data];
-    //       this.setState({ issues: newIssueArray});
-    //     })
-    //   } else {
-    //     res.json().catch(err => {console.log(err)});
-    //   }
-    // }).catch(error => console.log(error));
-
     // GraphQL Mutation for creating the issue
     fetch('/graphql', {
       method: 'POST',
@@ -138,11 +83,22 @@ class IssueList extends Component {
       });
   }
 
+  filterIssue = (filter) => {
+    if (filter.status || filter.effort) {
+      const filteredIssue = this.state.issues.filter(issue => {
+        return issue.status === filter.status || issue.effort === Number(filter.effort)
+      });
+      this.setState({issues: filteredIssue});
+    } else  {
+      this.loadData();
+    }
+  }
+
     render() {
         return (
             <div>
                 <h1>{this.state.name}</h1>
-                <IssueFilter />
+                <IssueFilter filterIssue={this.filterIssue}/>
                 <hr />
                 <IssueTable issues={this.state.issues} />
                 <hr />

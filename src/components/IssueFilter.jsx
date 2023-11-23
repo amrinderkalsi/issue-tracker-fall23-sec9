@@ -24,6 +24,15 @@ class IssueFilter extends Component {
         }
     }
 
+    handleApplyClick = () => {
+        this.props.filterIssue({status: this.state.status, effort: this.state.effort})
+    }
+
+    handleResetClick = () => {
+        this.props.filterIssue({status: '', effort: ''})
+        this.setState({ status: '', effort: ''});
+    }
+
     render() {
         return (
             <div>
@@ -37,11 +46,11 @@ class IssueFilter extends Component {
                 </select>
                 {' '}
                 Effort
-                <input type="text" value={this.state.effort}  onChange={this.handleEffortChange}/>
+                <input type="text" value={this.state.effort} onChange={this.handleEffortChange}/>
                 {' '}
-                <button>Apply</button>
+                <button onClick={this.handleApplyClick} disabled={!(this.state.status || this.state.effort)}>Apply</button>
                 {' '}
-                <button>Reset</button>
+                <button onClick={this.handleResetClick} disabled={!(this.state.status || this.state.effort)}>Reset</button>
             </div>
         );
     }
